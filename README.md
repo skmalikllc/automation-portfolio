@@ -83,12 +83,56 @@ over stdio against a messy sample file, both run in CI on Node 20, 22 and 24.
 
 ---
 
-# Client work
+# Client case studies
+
+Sanitized write-ups of completed, reviewed client work. No client names, data,
+credentials or documents appear in any of them.
+
+## gmail-business-inbox-organization
+
+**Problem.** A business mailbox that has run for years without a system stops
+being navigable: real work sits in the same undifferentiated list as
+newsletters, search is the only way to find anything, and the time cost lands on
+whoever owns the account.
+
+**Solution.** The backlog moved out of the inbox into a label and folder scheme
+built around how that business actually works, plus filters so incoming mail
+arrives already sorted and the inbox does not refill.
+
+**Tools.** Gmail (labels, filters, search operators, bulk actions), Google
+Workspace.
+
+**Proof.** Four completed engagements, all rated 5 stars, turnarounds of 1–9
+days; two of the four became ongoing working relationships.
+
+**Repository.** [skmalikllc/gmail-business-inbox-organization](https://github.com/skmalikllc/gmail-business-inbox-organization)
+
+## google-drive-file-organization
+
+**Problem.** Shared drives decay: files land at the root, two people invent two
+folder schemes, nobody deletes anything. Then the business changes cloud
+provider and that mess is what gets copied across — often flattened.
+
+**Solution.** Two related services — giving an existing Drive a structure the
+team can navigate, and moving a file estate between providers with the folder
+structure and file names intact.
+
+**Tools.** Google Drive, Google Docs, Mega, Dropbox, OneDrive.
+
+**Proof.** Four engagements across Upwork and Fiverr, 2023–2025, including a
+Mega → Google Drive transfer completed on a 5.0-rated Upwork contract and a
+published Fiverr portfolio project for an e-learning client.
+
+**Repository.** [skmalikllc/google-drive-file-organization](https://github.com/skmalikllc/google-drive-file-organization)
+
+---
+
+# Other completed client work
 
 Five completed Upwork contracts, every one rated **5.0**, with a 100% Job
-Success score. The work below is Google Workspace and automation. Detailed,
-sanitized case studies for these are being written; this section lists what each
-engagement was.
+Success score. The work below is Google Workspace and automation. Detailed
+sanitized case studies for the remaining engagements are in preparation; this
+section lists what each one was.
 
 | Engagement | What it involved | Tools |
 |---|---|---|
@@ -103,8 +147,9 @@ engagement was.
 > a clean, efficient solution ahead of schedule."
 > — Upwork client, November 2025
 
-Alongside this, **4.9 ★ from 109 reviews** on Fiverr across automation, Google
-Workspace, cloud storage migration and inbox/workflow cleanup work.
+Alongside this, **4.9 ★ from 109 reviews** on Fiverr (107 five-star, 2 four-star)
+across Google Workspace, inbox organisation, cloud storage migration, forms and
+workflow work, with reviews going back at least three years.
 
 ---
 
