@@ -27,6 +27,23 @@ production system belongs to a client — never because it is being embellished.
 
 ---
 
+## What I build
+
+```mermaid
+flowchart LR
+  S["Source systems<br/>forms · mailboxes · CRM<br/>contacts · cloud storage"] --> I["Integration layer<br/>n8n · Make · Zapier<br/>Apps Script · APIs"]
+  I --> Q["Data quality<br/>field mapping<br/>deduplication<br/>validation"]
+  Q --> D["Destination<br/>clean records · organised<br/>storage · reporting"]
+  Q --> X["Exceptions<br/>flagged for a human,<br/>never silently merged"]
+  I --> H["Handover<br/>written documentation"]
+```
+
+Every entry below is one of these four stages done for a real client, or an open-source
+tool I wrote for the data-quality stage. Detailed architecture diagrams live in each
+project's own repository.
+
+---
+
 # Open-source tooling
 
 ## contact-dedupe-mcp `OPEN-SOURCE UTILITY`
@@ -45,20 +62,11 @@ merges two different people who share a surname.
 export, find the rows that are the same person *with the evidence for each match*,
 merge them, and report every conflicting value instead of silently picking one.
 
-**Architecture.**
-
-```mermaid
-flowchart LR
-  A["Contact export<br/>CSV"] --> B["profile_csv<br/>columns, fill rate,<br/>field detection"]
-  B --> C["find_duplicates<br/>score + evidence"]
-  C --> D{"score at or above threshold?"}
-  D -- no --> E["left separate"]
-  D -- yes --> F["transitive grouping<br/>A–B, B–C then A,B,C"]
-  F --> G["dedupe_csv<br/>merge + conflict report"]
-  G --> H["cleaned CSV"]
-  G --> I["conflicts flagged<br/>kept vs dropped"]
-  C --> J["compare_records<br/>tune the threshold"]
-```
+**Architecture.** `profile_csv` reads the export and detects the fields → `find_duplicates`
+scores candidate pairs and returns the evidence for each → matches at or above the threshold
+are grouped transitively → `dedupe_csv` merges each group and reports every conflicting value.
+`compare_records` exists to tune the threshold on real pairs.
+[Full architecture diagram and module map →](https://github.com/skmalikllc/contact-dedupe-mcp#architecture)
 
 **Stack.** Node.js · Model Context Protocol (stdio) · zod · RFC 4180 CSV reader/writer written in-repo · GitHub Actions
 
@@ -93,19 +101,11 @@ names.
 expands merged cells into a proper rectangle first, and hands the table over as a CSV
 download or a clipboard payload that pastes one-value-per-cell into Google Sheets.
 
-**Architecture.**
-
-```mermaid
-flowchart LR
-  A["Page with tables"] -->|click toolbar icon| B["content.js<br/>injected on demand"]
-  B --> C["collectTables<br/>skip layout + single-row"]
-  C --> D["tableToMatrix<br/>expand rowspan/colspan"]
-  D --> E["preview in popup<br/>pick the right table"]
-  E --> F["matrixToCsv<br/>RFC 4180 + UTF-8 BOM"]
-  E --> G["matrixToTsv<br/>clipboard"]
-  F --> H["CSV download"]
-  G --> I["Ctrl+V into Google Sheets"]
-```
+**Architecture.** The content script is injected on demand → layout and single-row tables are
+skipped → `rowspan`/`colspan` are expanded into a true matrix → the popup previews each candidate
+→ the chosen table is written as RFC 4180 CSV (UTF-8 BOM) for download, or as TSV for a paste
+straight into Google Sheets.
+[Full architecture diagram and module map →](https://github.com/skmalikllc/table-to-sheets#architecture)
 
 **Stack.** Chrome Extension (Manifest V3) · JavaScript · node:test · jsdom · GitHub Actions
 
@@ -136,14 +136,9 @@ stale copy, and the address book the business runs on is changed with no way bac
 **System built.** A scheduled n8n workflow that captures the contact list on a
 recurring basis, so a bad day is recoverable.
 
-**Architecture** — the shape of the workflow, not its internals:
-
-```mermaid
-flowchart LR
-  A["Schedule trigger"] --> B["Read Google Contacts"]
-  B --> C["Capture snapshot"]
-  C --> D["Stored backup copy"]
-```
+**Architecture** — the shape of the workflow, not its internals: a schedule trigger reads Google
+Contacts, captures a snapshot, and writes it to a stored backup copy.
+[Workflow diagram →](https://github.com/skmalikllc/n8n-google-contacts-backup#architecture)
 
 **Stack.** n8n · Google Contacts · scheduled workflow trigger
 
@@ -168,16 +163,10 @@ does not fix that — it doubles it.
 not line up between the platforms, identifying the records that are the same person
 across both, and resolving the duplicates rather than importing over the top.
 
-**Architecture.**
-
-```mermaid
-flowchart LR
-  A["iCloud contacts"] --> C["Field mapping<br/>between platforms"]
-  B["Google Contacts"] --> C
-  C --> D["Match the same person<br/>across both sides"]
-  D --> E["Resolve duplicates"]
-  E --> F["One consistent address book"]
-```
+**Architecture.** Fields are mapped between the two platforms, the same person is matched across
+both sides, duplicates are resolved rather than imported over the top, and the result is one
+consistent address book.
+[Architecture diagram →](https://github.com/skmalikllc/icloud-google-contacts-sync#architecture)
 
 **Stack.** Google Contacts · iCloud · field mapping · deduplication and reconciliation
 
@@ -202,18 +191,11 @@ building knows what it was supposed to do.
 Workspace admin troubleshooting; and a conditional intake form far too large to build
 by hand, generated programmatically instead.
 
-**Architecture** — the generated-form system, the most substantial of the four:
-
-```mermaid
-flowchart TD
-  A["Question spec<br/>44 sections"] --> B["Apps Script generator"]
-  B --> C["Google Form<br/>617 questions"]
-  C --> D{"14 Yes/No gates"}
-  D -- not applicable --> E["Skip section"]
-  D -- applicable --> F["Show section"]
-  F --> G["Responses sheet"]
-  B -.rerun with edits.-> C
-```
+**Architecture** — the generated-form system, the most substantial of the four: a question spec
+covering 44 sections is turned by an Apps Script generator into a 617-question Google Form with
+14 Yes/No gates that skip or show whole sections, feeding a responses sheet. The generator is
+re-runnable, so edits are regenerated rather than re-clicked.
+[Architecture diagram →](https://github.com/skmalikllc/google-workspace-apps-script-automation#architecture--the-generated-form-system)
 
 **Stack.** Google Apps Script · Sheets · Forms · Gmail · Drive · Workspace admin
 
@@ -243,19 +225,11 @@ structure, and a sync that faithfully propagates a deletion to the only other co
 **Systems built.** Provider-to-provider migrations with structure preserved, and file
 architecture for drives that stayed where they were.
 
-**Architecture** — the method, applied to every engagement:
-
-```mermaid
-flowchart LR
-  A["Source provider"] --> B["Inventory<br/>what is really there"]
-  B --> C["Agree what must survive<br/>structure · names · dates"]
-  C --> D["Dry run<br/>no writes"]
-  D --> E["Transfer in batches<br/>never overwrite"]
-  E --> F["Reconcile<br/>file by file"]
-  F --> G{"Ambiguous?"}
-  G -- yes --> H["Escalate to client"]
-  G -- no --> I["Destination confirmed"]
-```
+**Architecture** — the method, applied to every engagement: inventory what is really there →
+agree in writing what must survive (structure, names, dates) → dry run with no writes → transfer
+in batches, never overwriting → reconcile file by file → escalate anything ambiguous instead of
+guessing.
+[Method diagram →](https://github.com/skmalikllc/cloud-file-migration-case-studies#architecture--the-method)
 
 **Stack.** Google Drive · OneDrive · Dropbox · Mega · Google Docs
 
@@ -285,17 +259,10 @@ remember the wording of is effectively lost.
 works, the backlog moved into it, and filters so incoming mail arrives already sorted
 and the inbox stops refilling.
 
-**Architecture.**
-
-```mermaid
-flowchart LR
-  A["Incoming mail"] --> B{"Filter rules"}
-  B -- recurring sender --> C["Labelled automatically"]
-  B -- live client work --> D["Stays visible in Inbox"]
-  E["Historic backlog"] --> F["Sorted into scheme"]
-  C --> G["Label + folder structure"]
-  F --> G
-```
+**Architecture.** Filter rules label recurring senders automatically while live client work stays
+visible in the Inbox; the historic backlog is sorted into the same scheme, so one label and folder
+structure covers both new and old mail.
+[Architecture diagram →](https://github.com/skmalikllc/gmail-business-inbox-organization#architecture)
 
 **Stack.** Gmail (labels, filters, search operators, bulk actions) · Microsoft 365 / Outlook · Google Workspace
 
@@ -348,14 +315,7 @@ longer existed. That is the shape most "broken automation" jobs take: nothing is
 with the logic, something it *refers to* moved, and the platform's error message does
 not say so. The fix is tracing the reference, not rebuilding the workflow.
 
-```mermaid
-flowchart LR
-  A["Automation stopped"] --> B{"Logic error?"}
-  B -- no --> C["Check every external reference"]
-  C --> D["View / table / field / endpoint IDs"]
-  D --> E["Stale reference found"]
-  E --> F["Repoint + verify"]
-```
+[The diagnostic, as a diagram →](https://github.com/skmalikllc/automation-client-case-studies#the-diagnostic-that-comes-up-most)
 
 **Stack.** n8n · Make.com · Zapier · Airtable · REST APIs · webhooks
 
@@ -391,6 +351,18 @@ Real and reviewed, kept separate so it does not crowd out the current work.
 7. **Verify the result** — count it, compare it.
 8. **Handle the exceptions**, and stop and ask where something is genuinely ambiguous.
 9. **Document the handover** so it survives without me.
+
+```mermaid
+flowchart LR
+  A["Understand<br/>source + destination"] --> B["Define the<br/>source of truth"]
+  B --> C["Map the fields"]
+  C --> D["Decide duplicate<br/>handling"]
+  D --> E["Test on<br/>controlled data"]
+  E --> F["Verify:<br/>count + compare"]
+  F --> G{"Ambiguous?"}
+  G -- yes --> H["Stop and ask"]
+  G -- no --> I["Document<br/>the handover"]
+```
 
 On larger builds this extends to retries, idempotent reruns, logging, alerting, a human
 approval step and end-of-run reconciliation — where the engagement warranted it. Not
