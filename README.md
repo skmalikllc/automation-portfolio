@@ -354,14 +354,11 @@ Real and reviewed, kept separate so it does not crowd out the current work.
 
 ```mermaid
 flowchart LR
-  A["Understand<br/>source + destination"] --> B["Define the<br/>source of truth"]
-  B --> C["Map the fields"]
-  C --> D["Decide duplicate<br/>handling"]
-  D --> E["Test on<br/>controlled data"]
-  E --> F["Verify:<br/>count + compare"]
-  F --> G{"Ambiguous?"}
-  G -- yes --> H["Stop and ask"]
-  G -- no --> I["Document<br/>the handover"]
+  A["Steps 1–3 · Understand<br/>source, destination,<br/>source of truth, field map"] --> B["Steps 4–5 · Decide<br/>duplicate handling<br/>and input validation"]
+  B --> C["Steps 6–7 · Prove<br/>test on controlled data,<br/>then count and compare"]
+  C --> D{"Step 8<br/>Ambiguous?"}
+  D -- yes --> E["Stop and ask"]
+  D -- no --> F["Step 9 · Document<br/>the handover"]
 ```
 
 On larger builds this extends to retries, idempotent reruns, logging, alerting, a human
