@@ -49,15 +49,15 @@ merge them, and report every conflicting value instead of silently picking one.
 
 ```mermaid
 flowchart LR
-  A[Contact export<br/>CSV] --> B[profile_csv<br/>columns, fill rate,<br/>field detection]
-  B --> C[find_duplicates<br/>score + evidence]
-  C --> D{score >= threshold?}
-  D -- no --> E[left separate]
-  D -- yes --> F[transitive grouping<br/>A–B, B–C ⇒ A,B,C]
-  F --> G[dedupe_csv<br/>merge + conflict report]
-  G --> H[cleaned CSV]
-  G --> I[conflicts flagged<br/>kept vs dropped]
-  C --> J[compare_records<br/>tune the threshold]
+  A["Contact export<br/>CSV"] --> B["profile_csv<br/>columns, fill rate,<br/>field detection"]
+  B --> C["find_duplicates<br/>score + evidence"]
+  C --> D{"score at or above threshold?"}
+  D -- no --> E["left separate"]
+  D -- yes --> F["transitive grouping<br/>A–B, B–C then A,B,C"]
+  F --> G["dedupe_csv<br/>merge + conflict report"]
+  G --> H["cleaned CSV"]
+  G --> I["conflicts flagged<br/>kept vs dropped"]
+  C --> J["compare_records<br/>tune the threshold"]
 ```
 
 **Stack.** Node.js · Model Context Protocol (stdio) · zod · RFC 4180 CSV reader/writer written in-repo · GitHub Actions
@@ -97,14 +97,14 @@ download or a clipboard payload that pastes one-value-per-cell into Google Sheet
 
 ```mermaid
 flowchart LR
-  A[Page with tables] -->|click toolbar icon| B[content.js<br/>injected on demand]
-  B --> C[collectTables<br/>skip layout + single-row]
-  C --> D[tableToMatrix<br/>expand rowspan/colspan]
-  D --> E[preview in popup<br/>pick the right table]
-  E --> F[matrixToCsv<br/>RFC 4180 + UTF-8 BOM]
-  E --> G[matrixToTsv<br/>clipboard]
-  F --> H[CSV download]
-  G --> I[Ctrl+V into Google Sheets]
+  A["Page with tables"] -->|click toolbar icon| B["content.js<br/>injected on demand"]
+  B --> C["collectTables<br/>skip layout + single-row"]
+  C --> D["tableToMatrix<br/>expand rowspan/colspan"]
+  D --> E["preview in popup<br/>pick the right table"]
+  E --> F["matrixToCsv<br/>RFC 4180 + UTF-8 BOM"]
+  E --> G["matrixToTsv<br/>clipboard"]
+  F --> H["CSV download"]
+  G --> I["Ctrl+V into Google Sheets"]
 ```
 
 **Stack.** Chrome Extension (Manifest V3) · JavaScript · node:test · jsdom · GitHub Actions
@@ -140,9 +140,9 @@ recurring basis, so a bad day is recoverable.
 
 ```mermaid
 flowchart LR
-  A[Schedule trigger] --> B[Read Google Contacts]
-  B --> C[Capture snapshot]
-  C --> D[Stored backup copy]
+  A["Schedule trigger"] --> B["Read Google Contacts"]
+  B --> C["Capture snapshot"]
+  C --> D["Stored backup copy"]
 ```
 
 **Stack.** n8n · Google Contacts · scheduled workflow trigger
@@ -172,11 +172,11 @@ across both, and resolving the duplicates rather than importing over the top.
 
 ```mermaid
 flowchart LR
-  A[iCloud contacts] --> C[Field mapping<br/>between platforms]
-  B[Google Contacts] --> C
-  C --> D[Match the same person<br/>across both sides]
-  D --> E[Resolve duplicates]
-  E --> F[One consistent address book]
+  A["iCloud contacts"] --> C["Field mapping<br/>between platforms"]
+  B["Google Contacts"] --> C
+  C --> D["Match the same person<br/>across both sides"]
+  D --> E["Resolve duplicates"]
+  E --> F["One consistent address book"]
 ```
 
 **Stack.** Google Contacts · iCloud · field mapping · deduplication and reconciliation
@@ -206,12 +206,12 @@ by hand, generated programmatically instead.
 
 ```mermaid
 flowchart TD
-  A[Question spec<br/>44 sections] --> B[Apps Script generator]
-  B --> C[Google Form<br/>617 questions]
-  C --> D{14 Yes/No gates}
-  D -- not applicable --> E[Skip section]
-  D -- applicable --> F[Show section]
-  F --> G[Responses sheet]
+  A["Question spec<br/>44 sections"] --> B["Apps Script generator"]
+  B --> C["Google Form<br/>617 questions"]
+  C --> D{"14 Yes/No gates"}
+  D -- not applicable --> E["Skip section"]
+  D -- applicable --> F["Show section"]
+  F --> G["Responses sheet"]
   B -.rerun with edits.-> C
 ```
 
@@ -247,14 +247,14 @@ architecture for drives that stayed where they were.
 
 ```mermaid
 flowchart LR
-  A[Source provider] --> B[Inventory<br/>what is really there]
-  B --> C[Agree what must survive<br/>structure · names · dates]
-  C --> D[Dry run<br/>no writes]
-  D --> E[Transfer in batches<br/>never overwrite]
-  E --> F[Reconcile<br/>file by file]
-  F --> G{Ambiguous?}
-  G -- yes --> H[Escalate to client]
-  G -- no --> I[Destination confirmed]
+  A["Source provider"] --> B["Inventory<br/>what is really there"]
+  B --> C["Agree what must survive<br/>structure · names · dates"]
+  C --> D["Dry run<br/>no writes"]
+  D --> E["Transfer in batches<br/>never overwrite"]
+  E --> F["Reconcile<br/>file by file"]
+  F --> G{"Ambiguous?"}
+  G -- yes --> H["Escalate to client"]
+  G -- no --> I["Destination confirmed"]
 ```
 
 **Stack.** Google Drive · OneDrive · Dropbox · Mega · Google Docs
@@ -289,11 +289,11 @@ and the inbox stops refilling.
 
 ```mermaid
 flowchart LR
-  A[Incoming mail] --> B{Filter rules}
-  B -- recurring sender --> C[Labelled automatically]
-  B -- live client work --> D[Stays visible in Inbox]
-  E[Historic backlog] --> F[Sorted into scheme]
-  C --> G[Label + folder structure]
+  A["Incoming mail"] --> B{"Filter rules"}
+  B -- recurring sender --> C["Labelled automatically"]
+  B -- live client work --> D["Stays visible in Inbox"]
+  E["Historic backlog"] --> F["Sorted into scheme"]
+  C --> G["Label + folder structure"]
   F --> G
 ```
 
@@ -350,11 +350,11 @@ not say so. The fix is tracing the reference, not rebuilding the workflow.
 
 ```mermaid
 flowchart LR
-  A[Automation stopped] --> B{Logic error?}
-  B -- no --> C[Check every external reference]
-  C --> D[View / table / field / endpoint IDs]
-  D --> E[Stale reference found]
-  E --> F[Repoint + verify]
+  A["Automation stopped"] --> B{"Logic error?"}
+  B -- no --> C["Check every external reference"]
+  C --> D["View / table / field / endpoint IDs"]
+  D --> E["Stale reference found"]
+  E --> F["Repoint + verify"]
 ```
 
 **Stack.** n8n · Make.com · Zapier · Airtable · REST APIs · webhooks
