@@ -209,6 +209,29 @@ every historical project had all nine, and this page does not claim otherwise.
 
 ---
 
+## Verified Fiverr delivery snapshot
+
+*Based on the reviewed Fiverr history snapshot of 26 September 2026 — not a lifetime total.*
+
+| Service line | Orders reviewed | Rated | Where the detail lives |
+|---|---:|---:|---|
+| Cloud and file migration — Drive, Dropbox, OneDrive | 40 | 13 | [cloud-file-migration-case-studies](https://github.com/skmalikllc/cloud-file-migration-case-studies) |
+| Gmail and business inbox systems | 27 | 14 | [gmail-business-inbox-organization](https://github.com/skmalikllc/gmail-business-inbox-organization) |
+| GoHighLevel / CRM lead capture | 19 | 8 | [gohighlevel-crm-automation-case-studies](https://github.com/skmalikllc/gohighlevel-crm-automation-case-studies) |
+| n8n and Make automation builds | 6 | 2 | [automation-client-case-studies](https://github.com/skmalikllc/automation-client-case-studies) |
+| Jotform forms and client intake | 5 | 3 | [jotform-client-intake-automation](https://github.com/skmalikllc/jotform-client-intake-automation) |
+| Smaller and one-off engagements | 6 | 3 | [fiverr-project-archive](https://github.com/skmalikllc/fiverr-project-archive) |
+| **Reviewed** | **103** | **44** | |
+
+**103 of 221 completed Fiverr orders were individually reviewed** before the platform
+presented a human-verification step and the audit stopped there. Every rating observed
+across those 103 was 5 stars. The remaining 118 completed orders are counted in the 221
+total but were not individually reconstructed, and nothing has been estimated to close
+the gap. Full accounting, including the four engagement types that have no case study
+elsewhere: [fiverr-project-archive](https://github.com/skmalikllc/fiverr-project-archive).
+
+---
+
 # Track record
 
 | | |
@@ -218,6 +241,7 @@ every historical project had all nine, and this page does not claim otherwise.
 | **Fiverr rating** | **4.9 ★ from 109 reviews** — 107 five-star, 2 four-star *(verified Sep 2026)* |
 | **Upwork** | 100% Job Success · Rising Talent · 5 completed contracts, every one **5.0** |
 | **Open source** | 3 repositories with tests running in CI on every push |
+| **Repositories here** | 24 |
 
 > "Delivered a clean, efficient solution ahead of schedule." — Upwork client · n8n workflow build · Nov 2025
 
